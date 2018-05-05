@@ -1,0 +1,7 @@
+#外观设置
+桌面前景，启动器大小，lock取消，电源选项，clock
+从dash搜索删除历史记录：转到系统设置（System Settings） > 安全与隐私（Security & Privacy） > 在文件与应用（Files and Applications）标签下 > 点击清除用户数据（Clear Usage Data） > 关闭“记录文件与应用使用（Record file and Application usage）以阻止系统记录你当前使用的文件和应用
+
+#中文输入法
+ubuntu英文系统需要额外安装“中文语言包”：选择System Settings-->Language Support-->Install/Remove Languages
+

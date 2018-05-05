@@ -1,0 +1,146 @@
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""Valloric/YouCompleteMe提供类似IDE的自动补全体验，还能和Syntastic配合提供实时语法检查""""""""""""""""
+"默认配置文件路径
+let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+"打开vim时不再询问是否加载ycm_extra_conf.py配置"
+let g:ycm_confirm_extra_conf=0
+set completeopt=longest,menu
+"python解释器路径
+let g:ycm_path_to_python_interpreter='$python_interpreter'
+"let g:ycm_path_to_python_interpreter='/home/pipi/ENV/ubuntu_env/bin/python'
+"是否开启语义补全
+let g:ycm_seed_identifiers_with_syntax=1
+"是否在注释中也开启补全
+let g:ycm_complete_in_comments=1
+let g:ycm_collect_identifiers_from_comments_and_strings = 0
+"开始补全的字符数
+let g:ycm_min_num_of_chars_for_completion=2
+"补全后自动关机预览窗口
+let g:ycm_autoclose_preview_window_after_completion=1
+" 禁止缓存匹配项,每次都重新生成匹配项
+let g:ycm_cache_omnifunc=0
+"字符串中也开启补全"
+let g:ycm_complete_in_strings = 1
+
+let g:ycm_server_keep_logfiles = 1
+"离开插入模式后自动关闭预览窗口
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+"回车即选中当前项   不要加这个，每次回车会出奇怪错误
+"inoremap <expr> <CR>       pumvisible() ? '\<C-y>' : '\<CR>'     
+"上下左右键行为
+inoremap <expr> <Down>     pumvisible() ? '\<C-n>' : '\<Down>'
+inoremap <expr> <Up>       pumvisible() ? '\<C-p>' : '\<Up>'
+inoremap <expr> <PageDown> pumvisible() ? '\<PageDown>\<C-p>\<C-n>' : '\<PageDown>'
+inoremap <expr> <PageUp>   pumvisible() ? '\<PageUp>\<C-p>\<C-n>' : '\<PageUp>'
+
+"定义了转到定义快捷方式
+"map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>    "跳转到定义GoToDefinition
+nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>    "跳转到声明GoToDeclaration
+nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>    "以及两者的合体GoToDefinitionElseDeclaration
+
+"python with virtualenv support, Add the virtualenv's site-packages to vim path
+if has('python3')
+py3 << EOF
+import os.path
+import sys
+if 'VIRTUAL_ENV' in os.environ:
+    project_base_dir = os.environ['VIRTUAL_ENV']
+    sys.path.insert(0, os.path.join(project_base_dir, 'lib', 'python%d.%d' % sys.version_info[:2], 'site-packages'))
+EOF
+endif
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""Lokaltog/vim-powerline"""""""""""""""""""""""""""""""""""""""""""""
+"abundent
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""NERDTree给vim添加一个树形目录，更方便的查看和切换文件"""""""""""""""""""""""""""""""""""""""
+"F2开启和关闭树"
+map <F2> :NERDTreeToggle<CR>
+let NERDTreeChDirMode=1
+"显示书签"
+let NERDTreeShowBookmarks=1
+"设置忽略文件类型"
+let NERDTreeIgnore=['\~$', '\.pyc$', '\.swp$']
+"窗口大小"
+"let NERDTreeWinSize=25
+"当打开vim且没有文件时自动打开NERDTree
+autocmd vimenter * if !argc() | NERDTree | endif
+" 只剩 NERDTree时自动关闭
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""indentLine是一款缩进指示线，由纯字符实现""""""""""""""""""""""""""""""""""""
+let g:indentLine_char='┆'
+let g:indentLine_enabled = 1
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""vim-autopep8/autopep8自动格式化工具，安装后在Normal模式输入:Autopep8或按F8就可以自动依照pep8的标准自动格式化代码"""""""""
+let g:autopep8_disable_show_diff=1
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""  auto-pairsauto-pairs括号和引号自动补全  """""""""""""""""""""""""""""""""""
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""" nerdcommenter  """""""""""""""""""""""""""""""""""
+"nerdcommenter和上面的NERDTree是同一作者，功能是方便写注释具体用法参考项目主页。nerdcommenter的leader默认为”\“，一般可以用下面的命令更改
+let mapleader=','
+"一般IDE和很多编辑器都提供command+/快速添加（取消）注释，使用nerdcommenter的ci命令
+map <c-_> <leader>ci <CR>
+"多行注释只需要在normal模式下按v并移动光标选择需要注释的行，再按ctrl+/。写<c-_>是由于历史原因Vim不会收到Ctrl+/键盘消息，但多数键盘布局上绑定<c-_>具有同样的效果(你按下 的仍然是Ctrl+/)
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""ctrlpvim/ctrlp.vim模仿Sublime Text 的ctrl + p功能，在工程中快速定位某个文件""""""""""""""""""
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""ctrlsf.vim模仿的Sublime Text的ctrl + shift + f功能。可以在工程中全局搜索某个特定的字符""""""""""""""""""
+map f <Plug>CtrlSFPrompt
+map F <Plug>CtrlSFQuickfixPrompt
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""majutsushi/tagbar显示文件中的类、函数、变量的功能""""""""""""""""""""""
+map <F3> :TagbarToggle<CR>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""vim-airline/vim-airline-themes""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""vim-airline拥有vim-powerline的全部功能，而且更美观，能和很多插件深度整合：vim模式、文件名、和tagbar深度整合得到的光标所处函数名、文件类型、编码类型、光标所处位置占比、光标所在行号和总行数、光标列数。如果是在终端或iterm中使用Vim，需要设置终端或iterm的字体为powerline字体才能正确显示特殊字符，如DejaVu Sans Mono for Powerline""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""后者可以为前者更换显示的主题""""""""""""""""""""""""""""""""""""""""""
+"Automatically displays all buffers when there's only one tab open
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+"最顶部显示的是当前打开的buffer,默认是关闭的，可以通过下面的配置启用：
+" 是否启用顶部tabline
+let g:airline#extensions#tabline#enabled = 1
+" 顶部tabline显示方式
+"let g:airline#extensions#tabline#left_sep = ' '
+"let g:airline#extensions#tabline#left_alt_sep = '|'
+"airline有很多主题可供选择，可以去项目主页选择喜欢的主题,然后在.vimrc中添加如下命令来设置主题：https://github.com/vim-airline/vim-airline-themes/blob/master/doc/airline-themes.txt
+let g:airline_theme="molokai"
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""rainbow_parentheses.vim为括号添加颜色"""""""""""""""""""""""""""""""""""
+let g:rbpt_colorpairs = [ ['brown', 'RoyalBlue3'], ['Darkblue', 'SeaGreen3'], ['darkgray', 'DarkOrchid3'], ['darkgreen', 'firebrick3'],['darkcyan', 'RoyalBlue3'],['darkred', 'SeaGreen3'],['darkmagenta', 'DarkOrchid3'],['brown', 'firebrick3'],['gray', 'RoyalBlue3'],['black',       'SeaGreen3'],['darkmagenta', 'DarkOrchid3'],['Darkblue',  'firebrick3'],['darkgreen', 'RoyalBlue3'],['darkcyan', 'SeaGreen3'],['darkred', 'DarkOrchid3'],['red', 'firebrick3']]
+let g:rbpt_max = 16
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""'tmhedberg/SimpylFold' "代码折叠（Code Folding）"""""""""""""""""""""""""""""""""""
+set foldmethod=indent
+set foldlevel=99 "默认展开所有代码
+
